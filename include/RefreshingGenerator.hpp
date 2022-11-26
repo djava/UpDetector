@@ -1,17 +1,12 @@
-#include <chrono>
+#pragma once
+
 #include <coroutine>
 #include <exception>
 #include <iostream>
 
-namespace chrono {
-using namespace std::chrono;
+#include "chrono.hpp"
 
-template <class T>
-concept Clock_Type = is_clock_v<T>;
-
-template <class T>
-concept Duration_Type = std::convertible_to<T, chrono::seconds>;
-};  // namespace chrono
+namespace UpDetector {
 
 // Adapted from: https://www.scs.stanford.edu/~dm/blog/c++-coroutines.html
 template <typename T, long Interval_v = 30, chrono::Duration_Type Interval_t = chrono::seconds,
@@ -20,7 +15,7 @@ struct RefreshingGenerator {
     struct promise_type;
     using handle_type = std::coroutine_handle<promise_type>;
 
-    constexpr static Interval_t Interval {Interval_v};
+    constexpr static Interval_t Interval{Interval_v};
 
     struct promise_type {  // required
         T value_;
@@ -68,7 +63,7 @@ struct RefreshingGenerator {
 
    private:
     T value;
-    chrono::time_point<Clock> fill_time {Interval_t::zero()};
+    chrono::time_point<Clock> fill_time{Interval_t::zero()};
 
     void fill() {
         if (needsFill()) {
@@ -76,7 +71,7 @@ struct RefreshingGenerator {
             this->fill_time = Clock::now();
             if (h_.promise().exception_) std::rethrow_exception(h_.promise().exception_);
             // propagate coroutine exception in called context
-            if (!h_.done()) { 
+            if (!h_.done()) {
                 value = std::move(h_.promise().value_);
             }
         }
@@ -84,3 +79,5 @@ struct RefreshingGenerator {
 
     bool needsFill() { return Clock::now() - this->fill_time > Interval; }
 };
+
+}  // namespace UpDetector

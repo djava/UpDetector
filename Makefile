@@ -1,6 +1,6 @@
 CXXFLAGS += --std=gnu++2a -I ./include/
 BUILDDIR = ./build
-EXES = isUpServer
+EXES = UpDetector
 
 all: $(EXES)
 
@@ -9,5 +9,5 @@ clean:
 tidy:
 	rm -f *.o
 
-isUpServer: isUpServer.cpp ./include/*
-	$(CXX) $(CXXFLAGS)  isUpServer.cpp -o $(BUILDDIR)/isUpServer
+UpDetector: UpDetector.cpp ./include/*
+	$(CXX) $(CXXFLAGS)  UpDetector.cpp -o $(BUILDDIR)/UpDetector
