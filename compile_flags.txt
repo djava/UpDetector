@@ -1,0 +1,5 @@
+--std=gnu++20
+-o
+isUpServer
+-I
+./include/
